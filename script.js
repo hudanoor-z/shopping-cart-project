@@ -27,9 +27,31 @@ let cart=[];
   }
   function addToCart(name,price)
   {
-    cart.push({name:name,price:price})
+    let found = false;
+    for(let i=0;i<cart.length;i++)
+    {
+      if(cart[i].name===name)
+      {
+        cart[i].qty++ ;
+        found=true;
+        break;
+      }
+    }
+    if(!found)
+    {
+    cart.push({name:name,price:price, qty:1});
+    }
     updateCart();
     alert("Added: " + name + " - " + price);
+  }
+  function decreaseItem(index)
+  {
+     cart[index].qty--;
+     if(cart[index].qty===0)
+     {
+      cart.splice(index,1);
+     }
+     updateCart();
   }
   function removeItem(index)
   {
@@ -43,10 +65,12 @@ let cart=[];
   let total=0;
   for (let i=0;i<cart.length;i++)
   {
-    total+=cart[i].price;
+    total+=cart[i].price * cart[i].qty;
     cartList.innerHTML+=`
     <li>
-    ${cart[i].name} - ${cart[i].price}
+    <button onclick="addToCart('${cart[i].name}', ${cart[i].price})">➕</button>
+      <button onclick="decreaseItem(${i})">➖</button>
+    ${cart[i].name} - ${cart[i].price} (x${cart[i].qty})
      <button onclick="removeItem(${i})">❌ Remove</button>
     </li>`;
   }
